@@ -1,0 +1,29 @@
+ersion: "2.0"
+
+services:
+  drone-agent:
+    command: agent
+    depends_on:
+      - drone-server
+    environment:
+      - DRONE_SERVER=ws:<IP-address-of-server>/ws/broker
+      - DRONE_SECRET=<shared-password-with-server>
+    image: drone/drone:latest
+    restart: always
+    volumes:
+      - /run/docker.sock:/run/docker.sock
+  drone-server:
+    environment:
+      - DRONE_OPEN=true
+      - DRONE_HOST=<server-IP>
+      - DRONE_GITHUB=true
+      - DRONE_GITHUB_CLIENT=<generatedbygithub>
+      - DRONE_GITHUB_SECRET=<generatedbygithub>
+      - DRONE_SECRET=shared-password-with-client>
+      - DRONE_DEBUG=true
+    image: drone/drone:latest
+    ports:
+      - 80:8000
+    restart: always
+    volumes:
+      - ./drone:/var/lib/drone/
